@@ -33,7 +33,7 @@ class TestReadingProcessor:
     # ... other tests ...
 
     @pytest.mark.skip(reason="will fail as we currently mutate readings")
-    def test_not_mutate_readings(self):
+    def test_should_not_mutate_readings(self):
         given = [self.build_reading()]
         identical_to_given = copy.deepcopy(given)
         sut = ReadingProcessor()
