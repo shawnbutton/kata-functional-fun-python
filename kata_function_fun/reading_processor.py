@@ -1,4 +1,4 @@
-from functools import partial
+from functools import partial, reduce
 from itertools import groupby
 from typing import List
 
@@ -10,32 +10,39 @@ def convert_to_fahrenheit(reading):
     return reading
 
 
+all_to_fahrenheit = partial(map, convert_to_fahrenheit)
+
+
 def has_data(x):
     return len(x.data) > 0 and not x.inactive
 
 
 only_with_data = partial(filter, has_data)
 
-all_to_fahrenheit = partial(map, convert_to_fahrenheit)
 
-def by_type(reading):
-    return reading.type
+def is_allowed_type(reading):
+    return reading.type in ['environmental', 'asset', 'vehicle']
 
+
+only_allowed_types = partial(filter, is_allowed_type)
+
+
+def group_by_type(accum, reading):
+    reading_type = reading.type
+    if not reading_type in accum:
+        accum[reading_type] = [reading]
+    else:
+        accum[reading_type].append(reading)
+    return accum
+
+by_type = partial(reduce, group_by_type)
 
 class ReadingProcessor:
     def process_readings(self, readings: List[Reading]):
         with_data = only_with_data(readings)
 
-        readings_in_fahrenheit = all_to_fahrenheit(with_data)
+        allowed_types = only_allowed_types(with_data)
 
-        grouped = {}
+        readings_in_fahrenheit = all_to_fahrenheit(allowed_types)
 
-        data = sorted(readings_in_fahrenheit, key=lambda r: r.type)
-        for readingType, reading in groupby(data, lambda r: r.type):
-            if readingType in ['environmental', 'asset', 'vehicle']:
-                grouped[readingType] = list(reading)
-
-        return grouped
-
-    def filter_has_data(self):
-        return partial(filter, has_data)
+        return by_type(readings_in_fahrenheit, {})
