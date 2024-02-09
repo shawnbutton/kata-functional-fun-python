@@ -2,6 +2,8 @@ from functools import partial, reduce
 from itertools import groupby
 from typing import List
 
+from toolz import pipe, compose_left
+
 from kata_function_fun.reading import Reading
 
 
@@ -35,14 +37,11 @@ def group_by_type(accum, reading):
         accum[reading_type].append(reading)
     return accum
 
-by_type = partial(reduce, group_by_type)
+
+def by_type(readings):
+    return reduce(group_by_type, readings, {})
+
 
 class ReadingProcessor:
     def process_readings(self, readings: List[Reading]):
-        with_data = only_with_data(readings)
-
-        allowed_types = only_allowed_types(with_data)
-
-        readings_in_fahrenheit = all_to_fahrenheit(allowed_types)
-
-        return by_type(readings_in_fahrenheit, {})
+        return compose_left(only_with_data, only_allowed_types, all_to_fahrenheit, by_type)(readings)
