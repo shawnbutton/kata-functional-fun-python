@@ -3,12 +3,12 @@
 ## Overview
 The goal of this kata is to practice refactoring [imperative code to a more declarative](https://dev.to/ruizb/declarative-vs-imperative-4a7l) style.
 
-Python provides great support for [functional](https://dev.to/ruizb/introduction-179d) programming, and by using
+Python provides great support for [functional](https://medium.com/akava/functional-programming-in-python-e492f2ad1e37) programming, and by using
 these built-in tools you can make your code more readable, changeable, and testable.
 
 ## Instructions
 
-If you look at [readingsProcessor.ts](./src/readingsProcessor.ts) you will find that there is a
+If you look at [ReadingProcessor](./kata_function_fun/reading_processor.py) you will find that there is a
 large "for" loop that goes through an array of "readings".
 
 The loop ignores some readings, changes some readings (converts celcius to farenheit),
