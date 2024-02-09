@@ -1,3 +1,4 @@
+from functools import partial
 from itertools import groupby
 from typing import List
 
@@ -13,19 +14,19 @@ def has_data(x):
     return len(x.data) > 0 and not x.inactive
 
 
+only_with_data = partial(filter, has_data)
+
+all_to_fahrenheit = partial(map, convert_to_fahrenheit)
+
 def by_type(reading):
     return reading.type
 
 
 class ReadingProcessor:
     def process_readings(self, readings: List[Reading]):
-        grouped = {}
+        with_data = only_with_data(readings)
 
-        # only process if we received data for reading
-        readings_with_data = [x for x in readings if has_data(x)]
-
-        # convert temperature readings to Fahrenheit
-        readings_in_fahrenheit = [convert_to_fahrenheit(x) for x in readings_with_data]
+        readings_in_fahrenheit = all_to_fahrenheit(with_data)
 
         grouped = {}
 
@@ -35,3 +36,6 @@ class ReadingProcessor:
                 grouped[readingType] = list(reading)
 
         return grouped
+
+    def filter_has_data(self):
+        return partial(filter, has_data)
