@@ -1,8 +1,3 @@
-from typing import List
-
-from kata_function_fun.reading import Reading
-
-
 class ReadingProcessor:
     def process_readings(self, readings):
         grouped = {}
