@@ -1,5 +1,6 @@
 class ReadingProcessor:
-    def process_readings(self, readings):
+    @staticmethod
+    def process_readings(readings):
         grouped = {}
         for reading in readings:
             # only process if we received data for reading
@@ -20,4 +21,3 @@ class ReadingProcessor:
                         grouped['vehicle'] = []
                     grouped['vehicle'].append(reading)
         return grouped
-
